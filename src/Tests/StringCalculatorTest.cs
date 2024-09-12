@@ -1,4 +1,5 @@
 
+
 using Domain;
 
 namespace Tests
@@ -60,14 +61,48 @@ namespace Tests
         }
 
         [Theory]
-        [InlineData("//;\n1;2", 3)]
+        [InlineData("//;\n1;2\n4,8", 3)]
+        [InlineData("//@\n1@2", 3)]
 
         public void RetornarASomaQuandoReceberUmaStringComNumerosSeparadosPorCatacteresPersonalizados(string numbers, int expected)
         {
+            /*  //<separator>\n<numbers>”   */
             var result = StringCalculator.Add(numbers);
 
             Assert.Equal(expected, result);
         }
+
+        [Theory]
+        [InlineData("1,-2,-3")]
+
+        public void LancarUmaExecaoQuandoReceberUmaStringComNumerosNegativos(string numbers)
+        {
+            /*  //<separator>\n<numbers>”   */
+
+            Assert.Throws<Exception>(() => StringCalculator.Add(numbers));
+        }
+
+        [Theory]
+        [InlineData("1,-2,-3")]
+
+        public void LancarUmaExecaoComUmaMensagemQuandoReceberUmaStringComNumerosNegativos(string numbers)
+        {
+            /*  //<separator>\n<numbers>”   */
+
+             var ex = Assert.Throws<Exception>(() => StringCalculator.Add(numbers));
+
+            Assert.Equal("error: negatives not allowed: -2 -3", ex.Message);
+        }
+
+        //[Theory]
+        //[InlineData("//;\n-1;2")]
+        //[InlineData("//@\n1@-2")]
+
+        //public void LancarUmaExecaoQuandoReceberUmaStringComNumerosNegativosSeparadosPorCatacteresPersonalizados(string numbers)
+        //{
+        //    /*  //<separator>\n<numbers>”   */
+        //    Assert.Throws<Exception>(() => StringCalculator.Add(numbers));
+        //}
 
     }
 }
